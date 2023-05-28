@@ -9,7 +9,7 @@ function Movie ( {id, title, posterURL, overview, releaseDate, getSession} ) {
     }
 
     function handleClick() {
-        navigate(`/sessions/${id}`)
+        navigate(`/sessoes/${id}`)
     }
 
     return (

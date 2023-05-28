@@ -1,35 +1,66 @@
 import styled from "styled-components"
-import MovieList from "../../components/MovieList"
-import { Link, useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import axios from "axios"
 import NavBar from "../../components/NavBar"
+import Movie from "../../components/Movie"
 
 
 export default function HomePage() {
 
     axios.defaults.headers.common['Authorization'] = 'V9Kd2mL8Zd4xXue6dt6D5mC2';
 
-    const [movies, setMovies] = useState({});
+    const [movies, setMovies] = useState([]);
     
-    function getMovies() {
-        const URL = 'https://mock-api.driven.com.br/api/v8/cineflex/movies';
+    const URL = 'https://mock-api.driven.com.br/api/v8/cineflex/movies';
 
-        useEffect(() => {
-            const promise = axios.get(URL);
-            promise.then(data => {
-                setMovies(data.data);
-            });
-        }, []);
-        
-    }
-    getMovies();
+    useEffect(() => {
+        const promise = axios.get(URL);
+        promise.then(data => {
+            setMovies(data.data);
+        });
+    }, []);
     
     return (
         <>
             <NavBar />
-            <MovieList movies={movies}/>
+            <PageContainer>
+                Selecione o filme
+                <ListContainer>
+                    {movies.map( movie => 
+                        <Movie
+                        key={movie.id}
+                        id={movie.id}
+                        title={movie.title}
+                        posterURL={movie.posterURL}
+                        overview={movie.overview}
+                        releaseDate={movie.releaseDate}
+                        />    
+                    )}
+                    
+                </ListContainer>
+            </PageContainer>    
+        
         </>
         
     )
 }
+
+
+const PageContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Roboto';
+    font-size: 24px;
+    text-align: center;
+    color: #293845;
+    margin-top: 30px;
+    padding-top: 70px;
+`
+const ListContainer = styled.div`
+    width: 330px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    padding: 10px;
+`

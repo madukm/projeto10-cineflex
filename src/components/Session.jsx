@@ -1,12 +1,20 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components'
 
 function Session({weekday, date, showtimes}) {
+    const navigate = useNavigate();
+
+    function handleClick(id) {
+        navigate(`/assentos/${id}`);
+    }
+    
     return (
         <SessionContainer>
             {weekday} - {date}
             <ButtonsContainer>
                 {showtimes.map( time => 
-                    <button>{time.name}</button>)
+                    <button onClick={() => handleClick(time.id)}>{time.name}</button>)
                 }
             </ButtonsContainer>
         </SessionContainer>
