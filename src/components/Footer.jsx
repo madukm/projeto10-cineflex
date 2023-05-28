@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
-function Footer( {imageURL, title}) {
+function Footer( {imageURL, title, weekday, time}) {
+    console.log(weekday);
     return (
         <FooterContainer>
             <div>
@@ -8,6 +9,9 @@ function Footer( {imageURL, title}) {
             </div>
             <div>
                 <p>{title}</p>
+                {typeof weekday !== "undefined" && 
+                    <p>{weekday} - {time}</p>
+                }
             </div>
         </FooterContainer>
     );

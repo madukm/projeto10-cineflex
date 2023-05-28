@@ -1,21 +1,30 @@
 import styled from 'styled-components'
+import { useState } from 'react';
 
-function Seat( {id, name, isAvailable} ) {
+function Seat( {id, name, isAvailable, colors} ) {
 
+    const [status, setStatus] = useState(isAvailable ? 'available' : 'unavailable');
+    
     function handleClick() {
-        
+        if ( status === 'unavailable') {
+            alert('Esse assento não está disponível');
+        } else if (status === 'available'){
+            setStatus('selected');
+        } else if (status === 'selected') {
+            setStatus('available');
+        }
     }
 
     return (
-        <SeatItem isAvailable={isAvailable} onClick={() => handleClick}>{name}</SeatItem>
+        <SeatItem status={status} colors={colors} onClick={handleClick}>{name}</SeatItem>
     );
 }
 
 export default Seat;
 
 const SeatItem = styled.div`
-    border: 1px solid ${props => props.isAvailable ? '#C3CFD9' : '#F7C52B'};
-    background-color: ${props => props.isAvailable ? '#1AAE9E' : '#FBE192'};
+    border: 1px solid ${props => props.colors[props.status].border};
+    background-color: ${props => props.colors[props.status].background};
     height: 25px;
     width: 25px;
     border-radius: 25px;

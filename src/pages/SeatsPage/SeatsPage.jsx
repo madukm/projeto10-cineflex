@@ -1,13 +1,16 @@
 import { useState } from "react";
 import styled from "styled-components"
 import Seat from "../../components/Seat";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
 import NavBar from "../../components/NavBar";
+import Footer from "../../components/Footer";
 
 export default function SeatsPage() {
     const [seats, setSeats] = useState([]);
+    const [sessionInfo, setSessionInfo] = useState({});
+    const [movieInfo, setMovieInfo] = useState([]);
 
     const colors = {
         selected: {background: '#1AAE9E', border: '#0E7D71'},
@@ -18,13 +21,28 @@ export default function SeatsPage() {
     const params = useParams();
     const URL = `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${params.idSessao}/seats`
     
+    const navigate = useNavigate();
+    
     useEffect(() => {
         const promise = axios.get(URL);
         promise.then(data => {
+            setSessionInfo(data.data.day);
+            setMovieInfo(data.data.movie);
             setSeats(data.data.seats);
-            console.log(data.data.seats);
         });
     }, []);
+
+    function handleClick() {
+        // useEffect(() => {
+        //     const promise = axios.post(URL);
+        //     promise.then(data => {
+        //         setSessionInfo(data.data.day);
+        //         setMovieInfo(data.data.movie);
+        //         setSeats(data.data.seats);
+        //     });
+        // }, []);
+        navigate('/sucesso');
+    }
 
     return (
         <>
@@ -38,7 +56,8 @@ export default function SeatsPage() {
                         key={seat.id}
                         id={seat.id} 
                         name={seat.name} 
-                        isAvailable={seat.isAvailable} />)
+                        isAvailable={seat.isAvailable} 
+                        colors={colors}/>)
                 }
             </SeatsContainer>
 
@@ -64,18 +83,14 @@ export default function SeatsPage() {
                 CPF do Comprador:
                 <input placeholder="Digite seu CPF..." />
 
-                <button>Reservar Assento(s)</button>
+                <button onClick={handleClick}>Reservar Assento(s)</button>
             </FormContainer>
 
-            <FooterContainer>
-                <div>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
-                </div>
-                <div>
-                    <p>Tudo em todo lugar ao mesmo tempo</p>
-                    <p>Sexta - 14h00</p>
-                </div>
-            </FooterContainer>
+            <Footer 
+                imageURL={movieInfo.posterURL} 
+                title={movieInfo.title}
+                weekday={sessionInfo.weekday}
+                time={sessionInfo.date}/>
 
         </PageContainer>
         </>
