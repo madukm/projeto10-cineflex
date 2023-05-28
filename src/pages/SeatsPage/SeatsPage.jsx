@@ -53,6 +53,7 @@ export default function SeatsPage() {
     )
 }
 
+
 const PageContainer = styled.div`
     display: flex;
     flex-direction: column;
