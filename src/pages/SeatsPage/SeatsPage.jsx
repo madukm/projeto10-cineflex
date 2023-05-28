@@ -8,9 +8,13 @@ import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
 
 export default function SeatsPage() {
+    const [seatStatus, setSeatStatus] = useState(new Map());
     const [seats, setSeats] = useState([]);
+    const [time, setTime] = useState('');
     const [sessionInfo, setSessionInfo] = useState({});
     const [movieInfo, setMovieInfo] = useState([]);
+    const [name, setName] = useState('');
+    const [cpf, setCPF] = useState('');
 
     const colors = {
         selected: {background: '#1AAE9E', border: '#0E7D71'},
@@ -21,27 +25,48 @@ export default function SeatsPage() {
     const params = useParams();
     const URL = `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${params.idSessao}/seats`
     
+    const URLpost = 'https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many';
+    
     const navigate = useNavigate();
     
+    // function initializeSeatsMap() {
+    //     const newMap = new Map();
+    //     seats.forEach(seat => {
+    //         newMap.set(seat.status, seat.isAvailable ? 'available' : 'unavailable');
+    //     });
+    //     setSeatStatus(newMap);
+    // }
+
     useEffect(() => {
         const promise = axios.get(URL);
         promise.then(data => {
+            setTime(data.data.name);
             setSessionInfo(data.data.day);
             setMovieInfo(data.data.movie);
             setSeats(data.data.seats);
+            //initializeSeatsMap();
         });
     }, []);
 
-    function handleClick() {
-        // useEffect(() => {
-        //     const promise = axios.post(URL);
-        //     promise.then(data => {
-        //         setSessionInfo(data.data.day);
-        //         setMovieInfo(data.data.movie);
-        //         setSeats(data.data.seats);
-        //     });
-        // }, []);
-        navigate('/sucesso');
+    function reserveSeat( event ) {
+        event.preventDefault();
+        const selectedSeats = [];
+        console.log(seatStatus);
+        for (const [id, status] of seatStatus) {
+            if (status === 'selected') {
+                selectedSeats.push(id);
+            }
+        }
+        const promise = axios.post(URLpost, {
+            ids: selectedSeats,
+            name: name,
+            cpf: cpf
+        });
+
+        promise.then(() => 
+            navigate('/sucesso')
+        );
+        
     }
 
     return (
@@ -57,7 +82,9 @@ export default function SeatsPage() {
                         id={seat.id} 
                         name={seat.name} 
                         isAvailable={seat.isAvailable} 
-                        colors={colors}/>)
+                        colors={colors}
+                        seatStatus={seatStatus}
+                        setSeatStatus={setSeatStatus}/>)
                 }
             </SeatsContainer>
 
@@ -77,20 +104,31 @@ export default function SeatsPage() {
             </CaptionContainer>
 
             <FormContainer>
-                Nome do Comprador:
-                <input placeholder="Digite seu nome..." />
+                <form onSubmit={reserveSeat}>
+                    Nome do Comprador:
+                    <input 
+                        placeholder="Digite seu nome..." 
+                        value={name}
+                        onChange={e => setName(e.target.value)}/>
 
-                CPF do Comprador:
-                <input placeholder="Digite seu CPF..." />
+                    CPF do Comprador:
+                    <input 
+                        placeholder="Digite seu CPF..." 
+                        value={cpf}
+                        onChange={e => setCPF(e.target.value)}
+                        />
 
-                <button onClick={handleClick}>Reservar Assento(s)</button>
+                    <button type="submit">
+                        Reservar Assento(s)
+                    </button>
+                </form>
             </FormContainer>
 
             <Footer 
                 imageURL={movieInfo.posterURL} 
                 title={movieInfo.title}
                 weekday={sessionInfo.weekday}
-                time={sessionInfo.date}/>
+                time={time}/>
 
         </PageContainer>
         </>

@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { useState } from 'react';
 
-function Seat( {id, name, isAvailable, colors} ) {
+function Seat( {id, name, isAvailable, colors, seatStatus, setSeatStatus} ) {
 
     const [status, setStatus] = useState(isAvailable ? 'available' : 'unavailable');
     
@@ -13,6 +13,7 @@ function Seat( {id, name, isAvailable, colors} ) {
         } else if (status === 'selected') {
             setStatus('available');
         }
+        setSeatStatus(new Map(seatStatus.set(id, status)));
     }
 
     return (
