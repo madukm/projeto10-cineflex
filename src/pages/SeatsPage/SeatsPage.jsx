@@ -42,7 +42,12 @@ export default function SeatsPage() {
         event.preventDefault();
         const selectedSeatsId = [];
         const selectedSeatsNumber = [];
+        const title = movieInfo.title;
+        const date = sessionInfo.date;
+
         for (const [id, status] of seatStatus) {
+            console.log(id);
+            console.log(status);
             if (status === 'selected') {
                 selectedSeatsId.push(id);
                 selectedSeatsNumber.push(seats[id]);
@@ -55,8 +60,7 @@ export default function SeatsPage() {
             cpf: cpf
         });
 
-        const title = movieInfo.title;
-        const date = sessionInfo.date;
+        
         promise.then(() => 
             navigate('/sucesso', {state: {title, date, time, selectedSeatsNumber, name, cpf}})
         );

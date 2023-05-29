@@ -10,10 +10,12 @@ function Seat( {id, name, isAvailable, colors, seatStatus, setSeatStatus} ) {
             alert('Esse assento não está disponível');
         } else if (status === 'available'){
             setStatus('selected');
+            setSeatStatus(new Map(seatStatus.set(id, 'selected')));
         } else if (status === 'selected') {
             setStatus('available');
+            setSeatStatus(new Map(seatStatus.set(id, 'available')));
         }
-        setSeatStatus(new Map(seatStatus.set(id, status)));
+        
     }
 
     return (
