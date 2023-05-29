@@ -1,42 +1,48 @@
 import { useLocation, useNavigate } from "react-router-dom"
 import styled from "styled-components"
+import NavBar from "../../components/NavBar";
 
 export default function SuccessPage() {
-    const {title, date, time, selectedSeatsNumber, name, cpf} = useLocation().state;
-
-    console.log(selectedSeatsNumber);
+    const {title, date, time, selectedSeats, name, cpf} = useLocation().state;
 
     const navigate = useNavigate();
-
+    selectedSeats.forEach( info => {
+        console.log(info.name);
+    })
+    
     function goBack() {
         navigate('/');
     }
 
     return (
-        <PageContainer>
-            <h1>Pedido feito <br /> com sucesso!</h1>
+        <>
+            <NavBar />
+            <PageContainer>
+                <h1>Pedido feito <br /> com sucesso!</h1>
 
-            <TextContainer data-test="movie-info">
-                <strong><p>Filme e sessão</p></strong>
-                <p>{title}</p>
-                <p>{date} - {time}</p>
-            </TextContainer>
+                <TextContainer data-test="movie-info">
+                    <strong><p>Filme e sessão</p></strong>
+                    <p>{title}</p>
+                    <p>{date} - {time}</p>
+                </TextContainer>
 
-            <TextContainer data-test="seats-info">
-                <strong><p>Ingressos</p></strong>
-                {selectedSeatsNumber.forEach(element => {
-                    <p>{element}</p>
-                })}
-            </TextContainer>
+                <TextContainer data-test="seats-info">
+                    <strong><p>Ingressos</p></strong>
+                    {selectedSeats.map( info => 
+                        <p>Assento {info.name}</p>
+                    )}
+                </TextContainer>
 
-            <TextContainer data-test="client-info">
-                <strong><p>Comprador</p></strong>
-                <p>Nome: {name}</p>
-                <p>CPF: {cpf}</p>
-            </TextContainer>
+                <TextContainer data-test="client-info">
+                    <strong><p>Comprador</p></strong>
+                    <p>Nome: {name}</p>
+                    <p>CPF: {cpf}</p>
+                </TextContainer>
 
-            <button onClick={goBack} data-test="go-home-btn">Voltar para Home</button>
-        </PageContainer>
+                <button onClick={goBack} data-test="go-home-btn">Voltar para Home</button>
+            </PageContainer>
+        </>
+        
     )
 }
 

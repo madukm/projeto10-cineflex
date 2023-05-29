@@ -8,13 +8,14 @@ import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
 
 export default function SeatsPage() {
-    const [seatStatus, setSeatStatus] = useState(new Map());
     const [seats, setSeats] = useState([]);
     const [time, setTime] = useState('');
     const [sessionInfo, setSessionInfo] = useState({});
     const [movieInfo, setMovieInfo] = useState([]);
     const [name, setName] = useState('');
     const [cpf, setCPF] = useState('');
+
+    const [seatInfo, setSeatInfo] = useState(new Map());
 
     const colors = {
         selected: {background: '#1AAE9E', border: '#0E7D71'},
@@ -40,29 +41,27 @@ export default function SeatsPage() {
 
     function reserveSeat( event ) {
         event.preventDefault();
-        const selectedSeatsId = [];
-        const selectedSeatsNumber = [];
+        
         const title = movieInfo.title;
         const date = sessionInfo.date;
+        const selectedSeats = [];
+        const selectedIds = [];
 
-        for (const [id, status] of seatStatus) {
-            console.log(id);
-            console.log(status);
-            if (status === 'selected') {
-                selectedSeatsId.push(id);
-                selectedSeatsNumber.push(seats[id]);
-                console.log(seats[id]);
+        for (const [id, info] of seatInfo) {
+            if (info.status === 'selected') {
+                selectedSeats.push({id: id, name: info.name});   
+                selectedIds.push(id);     
             }
         }
+        
         const promise = axios.post(URLpost, {
-            ids: selectedSeatsId,
+            ids: selectedIds,
             name: name,
             cpf: cpf
         });
 
-        
         promise.then(() => 
-            navigate('/sucesso', {state: {title, date, time, selectedSeatsNumber, name, cpf}})
+            navigate('/sucesso', {state: {title, date, time, selectedSeats, name, cpf}})
         );
         
     }
@@ -72,7 +71,7 @@ export default function SeatsPage() {
             <NavBar />
             <PageContainer>
             Selecione o(s) assento(s)
-
+            
             <SeatsContainer>
                 {seats.map( seat =>  
                     <Seat
@@ -81,9 +80,10 @@ export default function SeatsPage() {
                         name={seat.name} 
                         isAvailable={seat.isAvailable} 
                         colors={colors}
-                        seatStatus={seatStatus}
-                        setSeatStatus={setSeatStatus}/>)
-                }
+                        seatInfo={seatInfo}
+                        setSeatInfo={setSeatInfo}
+                    />
+                )}
             </SeatsContainer>
 
             <CaptionContainer>

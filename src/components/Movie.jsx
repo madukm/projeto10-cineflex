@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components'
 
-function Movie ( {id, title, posterURL, overview, releaseDate, getSession} ) {
+function Movie ( {id, posterURL} ) {
     const navigate = useNavigate();
 
     function handleClick() {

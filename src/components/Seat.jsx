@@ -1,19 +1,29 @@
 import styled from 'styled-components'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-function Seat( {id, name, isAvailable, colors, seatStatus, setSeatStatus} ) {
+function Seat( {id, name, isAvailable, colors, seatInfo, setSeatInfo} ) {
 
     const [status, setStatus] = useState(isAvailable ? 'available' : 'unavailable');
     
+    useEffect(() => {
+        setSeatInfo(new Map(seatInfo.set(id, 
+            {
+                'name': name, 
+                'status': isAvailable ? 'available' : 'unavailable'
+            }
+        )));
+    }, []);
+    
+
     function handleClick() {
         if ( status === 'unavailable') {
             alert('Esse assento não está disponível');
         } else if (status === 'available'){
             setStatus('selected');
-            setSeatStatus(new Map(seatStatus.set(id, 'selected')));
+            setSeatInfo(new Map(seatInfo.set(id, {'name': name, 'status': 'selected'})));
         } else if (status === 'selected') {
             setStatus('available');
-            setSeatStatus(new Map(seatStatus.set(id, 'available')));
+            setSeatInfo(new Map(seatInfo.set(id, {'name': name, 'status': 'available'})));
         }
         
     }

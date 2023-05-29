@@ -28,20 +28,14 @@ export default function HomePage() {
                 <ListContainer>
                     {movies.map( movie => 
                         <Movie
-                        key={movie.id}
-                        id={movie.id}
-                        title={movie.title}
-                        posterURL={movie.posterURL}
-                        overview={movie.overview}
-                        releaseDate={movie.releaseDate}
+                            key={movie.id}
+                            id={movie.id}
+                            posterURL={movie.posterURL}
                         />    
                     )}
-                    
                 </ListContainer>
             </PageContainer>    
-        
         </>
-        
     )
 }
 
