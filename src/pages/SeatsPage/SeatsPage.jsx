@@ -24,18 +24,9 @@ export default function SeatsPage() {
 
     const params = useParams();
     const URL = `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${params.idSessao}/seats`
-    
     const URLpost = 'https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many';
     
     const navigate = useNavigate();
-    
-    // function initializeSeatsMap() {
-    //     const newMap = new Map();
-    //     seats.forEach(seat => {
-    //         newMap.set(seat.status, seat.isAvailable ? 'available' : 'unavailable');
-    //     });
-    //     setSeatStatus(newMap);
-    // }
 
     useEffect(() => {
         const promise = axios.get(URL);
@@ -44,27 +35,30 @@ export default function SeatsPage() {
             setSessionInfo(data.data.day);
             setMovieInfo(data.data.movie);
             setSeats(data.data.seats);
-            //initializeSeatsMap();
         });
     }, []);
 
     function reserveSeat( event ) {
         event.preventDefault();
-        const selectedSeats = [];
-        console.log(seatStatus);
+        const selectedSeatsId = [];
+        const selectedSeatsNumber = [];
         for (const [id, status] of seatStatus) {
             if (status === 'selected') {
-                selectedSeats.push(id);
+                selectedSeatsId.push(id);
+                selectedSeatsNumber.push(seats[id]);
+                console.log(seats[id]);
             }
         }
         const promise = axios.post(URLpost, {
-            ids: selectedSeats,
+            ids: selectedSeatsId,
             name: name,
             cpf: cpf
         });
 
+        const title = movieInfo.title;
+        const date = sessionInfo.date;
         promise.then(() => 
-            navigate('/sucesso')
+            navigate('/sucesso', {state: {title, date, time, selectedSeatsNumber, name, cpf}})
         );
         
     }
@@ -109,16 +103,17 @@ export default function SeatsPage() {
                     <input 
                         placeholder="Digite seu nome..." 
                         value={name}
-                        onChange={e => setName(e.target.value)}/>
+                        onChange={e => setName(e.target.value)}
+                        data-test="client-name"/>
 
                     CPF do Comprador:
                     <input 
                         placeholder="Digite seu CPF..." 
                         value={cpf}
                         onChange={e => setCPF(e.target.value)}
-                        />
+                        data-test="client-cpf"/>
 
-                    <button type="submit">
+                    <button type="submit" data-test="book-seat-btn">
                         Reservar Assento(s)
                     </button>
                 </form>

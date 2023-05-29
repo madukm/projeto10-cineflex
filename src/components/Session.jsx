@@ -10,11 +10,11 @@ function Session({weekday, date, showtimes}) {
     }
     
     return (
-        <SessionContainer>
+        <SessionContainer data-test="movie-day">
             {weekday} - {date}
             <ButtonsContainer>
                 {showtimes.map( time => 
-                    <button onClick={() => handleClick(time.id)}>{time.name}</button>)
+                    <button onClick={() => handleClick(time.id)} data-test="showtime">{time.name}</button>)
                 }
             </ButtonsContainer>
         </SessionContainer>

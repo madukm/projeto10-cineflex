@@ -4,16 +4,12 @@ import styled from 'styled-components'
 function Movie ( {id, title, posterURL, overview, releaseDate, getSession} ) {
     const navigate = useNavigate();
 
-    function getTitle() {
-        return title;
-    }
-
     function handleClick() {
         navigate(`/sessoes/${id}`)
     }
 
     return (
-        <MovieContainer>
+        <MovieContainer data-test="movie">
             <img src={posterURL} onClick={handleClick}/>
         </MovieContainer>
     );

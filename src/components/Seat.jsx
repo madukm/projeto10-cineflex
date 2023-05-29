@@ -17,7 +17,7 @@ function Seat( {id, name, isAvailable, colors, seatStatus, setSeatStatus} ) {
     }
 
     return (
-        <SeatItem status={status} colors={colors} onClick={handleClick}>{name}</SeatItem>
+        <SeatItem status={status} colors={colors} onClick={handleClick} data-test="seat">{name}</SeatItem>
     );
 }
 

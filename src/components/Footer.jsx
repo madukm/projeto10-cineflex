@@ -1,9 +1,8 @@
 import styled from "styled-components";
 
 function Footer( {imageURL, title, weekday, time}) {
-    console.log(weekday);
     return (
-        <FooterContainer>
+        <FooterContainer data-test="footer">
             <div>
                 <img src={imageURL} alt="poster" />
             </div>
